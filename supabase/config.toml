@@ -1,0 +1,5 @@
+
+project_id = "ruzebhpdrjnrbpkpmcvd"
+
+[functions.jain-ai-chat]
+verify_jwt = false
