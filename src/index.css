@@ -61,7 +61,11 @@
 
 /* Enhanced shadows */
 .shadow-3xl {
-  box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.35);
+}
+
+.shadow-4xl {
+  box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.4);
 }
 
 /* Jain-specific gradients */
@@ -71,16 +75,42 @@
 
 /* Enhanced visibility classes */
 .high-contrast {
-  filter: contrast(1.2) brightness(1.1);
+  filter: contrast(1.3) brightness(1.15);
 }
 
 /* Better focus states */
 .focus-enhanced:focus {
-  outline: 3px solid rgba(255, 153, 51, 0.5);
+  outline: 4px solid rgba(255, 153, 51, 0.6);
   outline-offset: 2px;
 }
 
 /* Improved text readability */
 .text-enhanced {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Enhanced button styles */
+.btn-enhanced {
+  transform: translateZ(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-enhanced:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* Better loading animations */
+@keyframes enhanced-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+.animate-enhanced-pulse {
+  animation: enhanced-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

@@ -31,39 +31,42 @@ const APIKeySetup: React.FC<APIKeySetupProps> = ({ onKeyConfigured, currentLangu
       
       try {
         // Validate the API key format
-        if (!perplexityKey.startsWith('pplx-')) {
-          setIsValidating(false);
-          return; // Don't save invalid format keys
-        }
-
-        setAPIKey(perplexityKey.trim());
-        
-        // Test the API key with a simple request
-        try {
-          const testResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/jain-ai-chat`, {
-            method: 'POST',
+          // Test the API key with a direct Perplexity call
+          const testResponse = await fetch("https://api.perplexity.ai/chat/completions", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+              "Authorization": `Bearer ${perplexityKey.trim()}`,
+              "Content-Type": "application/json"
             },
-            body: JSON.stringify({ 
-              question: 'What is Jainism?', 
-              language: 'english', 
-              apiKey: perplexityKey.trim() 
+            body: JSON.stringify({
+              model: "llama-3.1-sonar-large-128k-online",
+              messages: [
+                { role: "user", content: "What is Jainism?" }
+              ],
+              max_tokens: 100
             })
           });
           
-          if (response.ok) {
+          if (testResponse.ok) {
             setIsConfigured(true);
             onKeyConfigured();
-            localStorage.setItem('jain_ai_perplexity_key_set', 'true');
+            toast({
+              title: "Success!",
+              description: "API key validated successfully"
+            });
           } else {
+            const errorData = await testResponse.text();
+            console.error('API validation failed:', errorData);
             throw new Error('API key validation failed');
           }
         } catch (testError) {
           console.warn('API key test failed, but saving anyway:', testError);
           // Save the key even if test fails (might be network issue)
-          setIsConfigured(true);
+          toast({
+            title: "Error",
+            description: "Failed to validate API key. Please check and try again.",
+            variant: "destructive"
+          });
           onKeyConfigured();
           localStorage.setItem('jain_ai_perplexity_key_set', 'true');
         }

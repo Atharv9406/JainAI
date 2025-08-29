@@ -82,12 +82,12 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
 
           {/* Web Search Indicator */}
           {message.isWebSearch && !message.error && (
-            <div className="flex items-center space-x-2 text-xs text-orange-600 dark:text-orange-400 mb-4 bg-orange-50 dark:bg-orange-950/30 px-3 py-2 rounded-full">
+            <div className="flex items-center space-x-2 text-sm text-orange-600 dark:text-orange-400 mb-4 bg-orange-50 dark:bg-orange-950/30 px-4 py-3 rounded-full border border-orange-200 dark:border-orange-800">
               <div className="relative">
-                <CheckCircle className="h-3 w-3" />
-                <div className="absolute -inset-1 bg-orange-400/20 rounded-full animate-pulse"></div>
+                <CheckCircle className="h-4 w-4" />
+                <div className="absolute -inset-1 bg-orange-400/30 rounded-full animate-pulse"></div>
               </div>
-              <span className="font-medium">
+              <span className="font-semibold">
                 {message.language === 'hindi' 
                   ? 'लाइव वेब खोज से जानकारी' 
                   : 'Live web search results'
@@ -156,12 +156,12 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
           )}
 
           {/* Main Message Content */}
-          <div className={`${message.language === 'hindi' ? 'font-devanagari' : 'font-sans'} text-sm leading-relaxed whitespace-pre-wrap text-gray-800 dark:text-gray-200`}>
+          <div className={`${message.language === 'hindi' ? 'font-devanagari' : 'font-sans'} text-base leading-relaxed whitespace-pre-wrap text-gray-800 dark:text-gray-200`}>
             {message.content}
           </div>
 
           {/* Enhanced Message Footer */}
-          <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-200/50 dark:border-gray-600/50">
+          <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200/50 dark:border-gray-600/50">
             <span className="text-xs text-muted-foreground flex items-center space-x-1">
               <div className={`w-2 h-2 rounded-full animate-pulse ${
                 message.error ? 'bg-red-500' : 'bg-green-500'
@@ -175,9 +175,9 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
               variant="ghost"
               size="sm"
               onClick={handleCopy}
-              className="h-8 px-4 text-xs hover:bg-orange-100 dark:hover:bg-orange-900/30 text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 rounded-full transition-all duration-200 font-medium"
+              className="h-9 px-4 text-sm hover:bg-orange-100 dark:hover:bg-orange-900/30 text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 rounded-full transition-all duration-200 font-semibold"
             >
-              <Copy className="h-3 w-3 mr-1" />
+              <Copy className="h-4 w-4 mr-2" />
               {message.language === 'hindi' ? 'कॉपी' : 'Copy'}
             </Button>
           </div>

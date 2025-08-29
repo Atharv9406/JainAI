@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Settings, Menu, Search, Loader2, Sparkles } from 'lucide-react';
+import { Settings, Search, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import JainHeader from './JainHeader';
 import MessageBubble from './MessageBubble';
@@ -10,7 +8,7 @@ import LanguageToggle from './LanguageToggle';
 import QuickSuggestions from './QuickSuggestions';
 import SettingsModal from './SettingsModal';
 import FloatingInput from './FloatingInput';
-import { detectLanguage, getAIResponse } from '../utils/aiService';
+import { getAIResponse, getAPIKey } from '../utils/aiService';
 
 export interface Message {
   id: string;
@@ -52,13 +50,12 @@ const JainAIChat = () => {
     const checkConnection = async () => {
       setConnectionStatus('checking');
       try {
-        // Simple connectivity check
-        const testKey = getAPIKey();
-        if (testKey) {
-          // Test with a simple question to verify connectivity
-          await getAIResponse('test connection', 'english');
+        const apiKey = getAPIKey();
+        if (apiKey && apiKey.startsWith('pplx-')) {
+          setConnectionStatus('connected');
+        } else {
+          setConnectionStatus('disconnected');
         }
-        setConnectionStatus('connected');
       } catch (error) {
         console.log('Connection check failed:', error);
         setConnectionStatus('disconnected');
@@ -67,6 +64,7 @@ const JainAIChat = () => {
 
     checkConnection();
   }, []);
+
   useEffect(() => {
     // Welcome message based on current language
     const welcomeMessage: Message = {
@@ -205,34 +203,34 @@ const JainAIChat = () => {
         
         {/* Enhanced Loading Indicator */}
         {isLoading && (
-          <div className="flex items-center justify-center space-x-3 text-muted-foreground px-4 py-6">
+          <div className="flex items-center justify-center space-x-4 text-muted-foreground px-6 py-8">
             <div className="relative">
               {isWebSearching ? (
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4">
                   <div className="relative">
-                    <Search className="h-6 w-6 animate-spin text-orange-500" />
-                    <div className="absolute -inset-1 bg-orange-400/20 rounded-full animate-pulse"></div>
+                    <Search className="h-8 w-8 animate-spin text-orange-500" />
+                    <div className="absolute -inset-2 bg-orange-400/20 rounded-full animate-pulse"></div>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-base font-medium text-gray-700">
+                    <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">
                       {currentLanguage === 'hindi' ? 'जानकारी खोजी जा रही है...' : 'Searching for information...'}
                     </span>
-                    <span className="text-sm opacity-70">
+                    <span className="text-sm opacity-70 font-medium">
                       {currentLanguage === 'hindi' ? 'कृपया प्रतीक्षा करें' : 'Please wait'}
                     </span>
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4">
                   <div className="relative">
-                    <Sparkles className="h-6 w-6 text-orange-500 animate-pulse" />
-                    <div className="absolute -inset-1 bg-orange-400/20 rounded-full animate-ping"></div>
+                    <Sparkles className="h-8 w-8 text-orange-500 animate-pulse" />
+                    <div className="absolute -inset-2 bg-orange-400/20 rounded-full animate-ping"></div>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-base font-medium text-gray-700">
+                    <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">
                       {currentLanguage === 'hindi' ? 'जैन एआई सोच रहा है...' : 'JAIN AI is thinking...'}
                     </span>
-                    <span className="text-sm opacity-70">
+                    <span className="text-sm opacity-70 font-medium">
                       {currentLanguage === 'hindi' ? 'उत्तर तैयार कर रहे हैं' : 'Preparing response'}
                     </span>
                   </div>
