@@ -19,6 +19,7 @@ export interface Message {
   timestamp: Date;
   language: 'english' | 'hindi';
   isWebSearch?: boolean;
+  error?: boolean;
   sectarian?: {
     svetambara?: string;
     digambara?: string;
@@ -34,6 +35,7 @@ const JainAIChat = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [isWebSearching, setIsWebSearching] = useState(false);
   const [showQuickSuggestions, setShowQuickSuggestions] = useState(true);
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'disconnected' | 'checking'>('checking');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -45,6 +47,26 @@ const JainAIChat = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Check connection status
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/jain-ai-chat`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          },
+          body: JSON.stringify({ question: 'test', language: 'english', apiKey: 'test' })
+        });
+        setConnectionStatus('connected');
+      } catch (error) {
+        setConnectionStatus('disconnected');
+      }
+    };
+
+    checkConnection();
+  }, []);
   useEffect(() => {
     // Welcome message based on current language
     const welcomeMessage: Message = {
@@ -91,6 +113,7 @@ const JainAIChat = () => {
         timestamp: new Date(),
         language: currentLanguage, // Use selected language for response
         isWebSearch: response.usedWebSearch,
+        error: response.content.includes('API key') || response.content.includes('Sorry') || response.content.includes('क्षमा करें'),
         sectarian: response.sectarian
       };
 
@@ -104,7 +127,8 @@ const JainAIChat = () => {
           : '**Sorry** 🙏\n\nI\'m having difficulty responding right now. Please try rephrasing your question.',
         sender: 'ai',
         timestamp: new Date(),
-        language: currentLanguage
+        language: currentLanguage,
+        error: true
       };
       setMessages(prev => [...prev, errorMessage]);
       toast({
@@ -149,6 +173,7 @@ const JainAIChat = () => {
         currentLanguage={currentLanguage}
         onSettingsClick={() => setShowSettings(true)}
         onClearChat={() => {}}
+        connectionStatus={connectionStatus}
       />
 
       {/* Language Toggle Bar */}
@@ -185,14 +210,14 @@ const JainAIChat = () => {
               {isWebSearching ? (
                 <div className="flex items-center space-x-3">
                   <div className="relative">
-                    <Search className="h-5 w-5 animate-spin text-orange-500" />
+                    <Search className="h-6 w-6 animate-spin text-orange-500" />
                     <div className="absolute -inset-1 bg-orange-400/20 rounded-full animate-pulse"></div>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-sm font-medium">
+                    <span className="text-base font-medium text-gray-700">
                       {currentLanguage === 'hindi' ? 'जानकारी खोजी जा रही है...' : 'Searching for information...'}
                     </span>
-                    <span className="text-xs opacity-60">
+                    <span className="text-sm opacity-70">
                       {currentLanguage === 'hindi' ? 'कृपया प्रतीक्षा करें' : 'Please wait'}
                     </span>
                   </div>
@@ -200,14 +225,14 @@ const JainAIChat = () => {
               ) : (
                 <div className="flex items-center space-x-3">
                   <div className="relative">
-                    <Sparkles className="h-5 w-5 text-orange-500 animate-pulse" />
+                    <Sparkles className="h-6 w-6 text-orange-500 animate-pulse" />
                     <div className="absolute -inset-1 bg-orange-400/20 rounded-full animate-ping"></div>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-sm font-medium">
+                    <span className="text-base font-medium text-gray-700">
                       {currentLanguage === 'hindi' ? 'जैन एआई सोच रहा है...' : 'JAIN AI is thinking...'}
                     </span>
-                    <span className="text-xs opacity-60">
+                    <span className="text-sm opacity-70">
                       {currentLanguage === 'hindi' ? 'उत्तर तैयार कर रहे हैं' : 'Preparing response'}
                     </span>
                   </div>

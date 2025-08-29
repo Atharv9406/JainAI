@@ -473,6 +473,30 @@ function getKnowledgeResponse(query: string, language: 'english' | 'hindi'): { c
   return null;
 }
 
+// API Key management functions
+let storedAPIKey: string | null = null;
+
+export function setAPIKey(key: string): void {
+  storedAPIKey = key;
+  localStorage.setItem('jain_ai_perplexity_key', key);
+}
+
+export function getAPIKey(): string | null {
+  if (storedAPIKey) return storedAPIKey;
+  
+  const stored = localStorage.getItem('jain_ai_perplexity_key');
+  if (stored) {
+    storedAPIKey = stored;
+    return stored;
+  }
+  
+  return null;
+}
+
+export function isAPIKeyConfigured(): boolean {
+  return !!getAPIKey();
+}
+
 // Main AI response function
 export async function getAIResponse(
   question: string, 
@@ -480,7 +504,7 @@ export async function getAIResponse(
   setWebSearchStatus?: (searching: boolean) => void
 ): Promise<AIResponse> {
   
-  // 1. Check knowledge base
+  // 1. Check knowledge base first
   const knowledgeResponse = getKnowledgeResponse(question, selectedLanguage);
   if (knowledgeResponse) {
     return {
@@ -490,35 +514,57 @@ export async function getAIResponse(
     };
   }
 
+  // 2. Check if API key is configured
+  const apiKey = getAPIKey();
+  if (!apiKey) {
+    return {
+      content: selectedLanguage === 'hindi'
+        ? "**API कुंजी आवश्यक है**\n\nकृपया सेटिंग्स में अपनी Perplexity API कुंजी दर्ज करें।"
+        : "**API Key Required**\n\nPlease enter your Perplexity API key in settings to continue.",
+      usedWebSearch: false
+    };
+  }
+
   try {
-    // 2. Call Supabase edge function -> Perplexity API
+    if (setWebSearchStatus) setWebSearchStatus(true);
+
+    // 3. Call Supabase edge function with API key
     const { data, error } = await supabase.functions.invoke('jain-ai-chat', {
-      body: { question, language: selectedLanguage }
+      body: { 
+        question, 
+        language: selectedLanguage,
+        apiKey: apiKey
+      }
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase function error:', error);
+      throw new Error(error.message || 'Failed to get response from AI service');
+    }
 
     if (data?.content) {
       return {
         content: data.content,
-        usedWebSearch: data.usedWebSearch || false,
+        usedWebSearch: data.usedWebSearch || true,
         sectarian: data.sectarian
       };
     }
 
-    throw new Error("Empty response from Perplexity");
+    throw new Error("Empty response from AI service");
     
   } catch (err) {
     console.error("AI service failed:", err);
     return {
       content: selectedLanguage === 'hindi'
-        ? "**क्षमा करें**\n\nमैं इस समय AI सेवाओं से जुड़ने में असमर्थ हूं।"
-        : "**Sorry**\n\nI'm unable to connect to AI services at the moment.",
+        ? "**क्षमा करें** 🙏\n\nमुझे इस समय AI सेवाओं से जुड़ने में समस्या हो रही है। कृपया अपनी API कुंजी जांचें या बाद में पुनः प्रयास करें।"
+        : "**Sorry** 🙏\n\nI'm having trouble connecting to AI services right now. Please check your API key or try again later.",
       usedWebSearch: false
     };
+  } finally {
+    if (setWebSearchStatus) setWebSearchStatus(false);
   }
 }
 
 export function areAPIKeysConfigured(): boolean {
-  return true; // Always true now
+  return isAPIKeyConfigured();
 }

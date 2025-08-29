@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Copy, Search, Users, Globe, BookOpen } from 'lucide-react';
+import { Copy, Search, Users, Globe, BookOpen, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
@@ -62,18 +62,35 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   return (
     <div className="flex justify-start mb-6">
       <div className="max-w-[85%] md:max-w-[80%]">
-        <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md p-6 rounded-3xl rounded-bl-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-orange-200/30 dark:border-orange-800/30">
+        <Card className={`backdrop-blur-md p-6 rounded-3xl rounded-bl-lg shadow-lg hover:shadow-xl transition-all duration-300 ${
+          message.error 
+            ? 'bg-red-50/90 dark:bg-red-950/90 border border-red-200/50 dark:border-red-800/50' 
+            : 'bg-white/90 dark:bg-gray-800/90 border border-orange-200/30 dark:border-orange-800/30'
+        }`}>
+          {/* Error Indicator */}
+          {message.error && (
+            <div className="flex items-center space-x-2 text-xs text-red-600 dark:text-red-400 mb-4 bg-red-100 dark:bg-red-950/50 px-3 py-2 rounded-full">
+              <AlertTriangle className="h-3 w-3" />
+              <span className="font-medium">
+                {message.language === 'hindi' 
+                  ? 'त्रुटि या चेतावनी' 
+                  : 'Error or Warning'
+                }
+              </span>
+            </div>
+          )}
+
           {/* Web Search Indicator */}
-          {message.isWebSearch && (
+          {message.isWebSearch && !message.error && (
             <div className="flex items-center space-x-2 text-xs text-orange-600 dark:text-orange-400 mb-4 bg-orange-50 dark:bg-orange-950/30 px-3 py-2 rounded-full">
               <div className="relative">
-                <Globe className="h-3 w-3" />
+                <CheckCircle className="h-3 w-3" />
                 <div className="absolute -inset-1 bg-orange-400/20 rounded-full animate-pulse"></div>
               </div>
               <span className="font-medium">
                 {message.language === 'hindi' 
-                  ? 'वेब खोज से जानकारी' 
-                  : 'Information from web search'
+                  ? 'लाइव वेब खोज से जानकारी' 
+                  : 'Live web search results'
                 }
               </span>
             </div>
@@ -146,14 +163,19 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
           {/* Enhanced Message Footer */}
           <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-200/50 dark:border-gray-600/50">
             <span className="text-xs text-muted-foreground flex items-center space-x-1">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <div className={`w-2 h-2 rounded-full animate-pulse ${
+                message.error ? 'bg-red-500' : 'bg-green-500'
+              }`}></div>
               <span>{formatTime(message.timestamp)}</span>
+              {message.isWebSearch && !message.error && (
+                <span className="text-orange-500 font-medium">• Live</span>
+              )}
             </span>
             <Button
               variant="ghost"
               size="sm"
               onClick={handleCopy}
-              className="h-7 px-3 text-xs hover:bg-orange-100 dark:hover:bg-orange-900/30 text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 rounded-full transition-all duration-200"
+              className="h-8 px-4 text-xs hover:bg-orange-100 dark:hover:bg-orange-900/30 text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 rounded-full transition-all duration-200 font-medium"
             >
               <Copy className="h-3 w-3 mr-1" />
               {message.language === 'hindi' ? 'कॉपी' : 'Copy'}
