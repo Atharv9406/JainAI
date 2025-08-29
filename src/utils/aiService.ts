@@ -525,21 +525,44 @@ export async function getAIResponse(
     };
   }
 
+  // 3. Validate API key format
+  if (!apiKey.startsWith('pplx-')) {
+    return {
+      content: selectedLanguage === 'hindi'
+        ? "**अमान्य API कुंजी**\n\nPerplexity API कुंजी 'pplx-' से शुरू होनी चाहिए। कृपया सेटिंग्स में सही कुंजी दर्ज करें।"
+        : "**Invalid API Key**\n\nPerplexity API key must start with 'pplx-'. Please enter the correct key in settings.",
+      usedWebSearch: false
+    };
+  }
   try {
     if (setWebSearchStatus) setWebSearchStatus(true);
 
-    // 3. Call Supabase edge function with API key
+    // 4. Call Supabase edge function with enhanced error handling
+    console.log('Calling Supabase edge function...');
+    
     const { data, error } = await supabase.functions.invoke('jain-ai-chat', {
       body: { 
         question, 
         language: selectedLanguage,
         apiKey: apiKey
+      },
+      headers: {
+        'Content-Type': 'application/json'
       }
     });
 
+    console.log('Supabase function response:', { data, error });
     if (error) {
-      console.error('Supabase function error:', error);
-      throw new Error(error.message || 'Failed to get response from AI service');
+      console.error('Supabase function error details:', error);
+      
+      // Handle specific error types
+      if (error.message?.includes('Failed to fetch')) {
+        throw new Error('Network connection failed. Please check your internet connection and try again.');
+      } else if (error.message?.includes('API key')) {
+        throw new Error('API key validation failed. Please check your Perplexity API key in settings.');
+      } else {
+        throw new Error(error.message || 'Failed to connect to AI service');
+      }
     }
 
     if (data?.content) {
@@ -550,15 +573,36 @@ export async function getAIResponse(
       };
     }
 
+    // Handle empty response
+    if (data?.error) {
+      throw new Error(data.error);
+    }
     throw new Error("Empty response from AI service");
     
   } catch (err) {
-    console.error("AI service failed:", err);
+    console.error("AI service failed with error:", err);
+    
+    // Provide more specific error messages
+    let errorMessage = '';
+    
+    if (err.message?.includes('Network connection failed')) {
+      errorMessage = selectedLanguage === 'hindi'
+        ? "**नेटवर्क त्रुटि** 🌐\n\nइंटरनेट कनेक्शन की जांच करें और पुनः प्रयास करें।"
+        : "**Network Error** 🌐\n\nPlease check your internet connection and try again.";
+    } else if (err.message?.includes('API key')) {
+      errorMessage = selectedLanguage === 'hindi'
+        ? "**API कुंजी त्रुटि** 🔑\n\nकृपया सेटिंग्स में अपनी Perplexity API कुंजी जांचें।"
+        : "**API Key Error** 🔑\n\nPlease check your Perplexity API key in settings.";
+    } else {
+      errorMessage = selectedLanguage === 'hindi'
+        ? `**सेवा त्रुटि** ⚠️\n\nAI सेवा में समस्या: ${err.message}\n\nकृपया कुछ समय बाद पुनः प्रयास करें।`
+        : `**Service Error** ⚠️\n\nAI service issue: ${err.message}\n\nPlease try again in a few moments.`;
+    }
+    
     return {
-      content: selectedLanguage === 'hindi'
-        ? "**क्षमा करें** 🙏\n\nमुझे इस समय AI सेवाओं से जुड़ने में समस्या हो रही है। कृपया अपनी API कुंजी जांचें या बाद में पुनः प्रयास करें।"
-        : "**Sorry** 🙏\n\nI'm having trouble connecting to AI services right now. Please check your API key or try again later.",
-      usedWebSearch: false
+      content: errorMessage,
+      usedWebSearch: false,
+      error: true
     };
   } finally {
     if (setWebSearchStatus) setWebSearchStatus(false);

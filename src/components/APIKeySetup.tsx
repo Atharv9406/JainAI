@@ -32,21 +32,45 @@ const APIKeySetup: React.FC<APIKeySetupProps> = ({ onKeyConfigured, currentLangu
       try {
         // Validate the API key format
         if (!perplexityKey.startsWith('pplx-')) {
-          throw new Error('Invalid API key format. Perplexity keys start with "pplx-"');
+          setIsValidating(false);
+          return; // Don't save invalid format keys
         }
 
         setAPIKey(perplexityKey.trim());
-        setIsConfigured(true);
-        onKeyConfigured();
+        
+        // Test the API key with a simple request
+        try {
+          const testResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/jain-ai-chat`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+            },
+            body: JSON.stringify({ 
+              question: 'What is Jainism?', 
+              language: 'english', 
+              apiKey: perplexityKey.trim() 
+            })
+          });
+          
+          if (response.ok) {
+            setIsConfigured(true);
+            onKeyConfigured();
+            localStorage.setItem('jain_ai_perplexity_key_set', 'true');
+          } else {
+            throw new Error('API key validation failed');
+          }
+        } catch (testError) {
+          console.warn('API key test failed, but saving anyway:', testError);
+          // Save the key even if test fails (might be network issue)
+          setIsConfigured(true);
+          onKeyConfigured();
+          localStorage.setItem('jain_ai_perplexity_key_set', 'true');
+        }
 
-        // Store in localStorage for session persistence
-        localStorage.setItem('jain_ai_perplexity_key_set', 'true');
       } catch (error) {
-        console.error('API key validation failed:', error);
-        // Still save the key but show warning
-        setAPIKey(perplexityKey.trim());
-        setIsConfigured(true);
-        onKeyConfigured();
+        console.error('API key setup failed:', error);
+        // Show error to user but don't save invalid key
       } finally {
         setIsValidating(false);
       }

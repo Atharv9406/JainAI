@@ -1,4 +1,3 @@
-// index.ts — Enhanced Jain AI Chat with Perplexity API
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 
 const corsHeaders = {
@@ -57,63 +56,6 @@ const jainKnowledgeBase = {
 • मोक्ष मार्ग की प्रेरणा
 • कर्म शुद्धि का अवसर
 • आत्म-चिंतन और सुधार`,
-    'suhag dhsami': `**सुहाग दशमी - जैन महिलाओं का पवित्र व्रत**
-
-**आश्विन शुक्ल दशमी** को मनाया जाने वाला यह व्रत है।
-
-**व्रत की विधि:**
-• प्रातःकाल स्नान और शुद्ध आहार
-• तीर्थंकर पूजा और नवकार मंत्र जाप
-• सुहागिन महिलाओं का सम्मान
-• दान और सेवा कार्य
-
-**महत्व:**
-• पारिवारिक सुख-शांति के लिए
-• धार्मिक जीवन में स्थिरता
-• आध्यात्मिक उन्नति का साधन
-
-**मनाने वाले:**
-• मुख्यतः जैन महिलाएं
-• पारिवारिक कल्याण की कामना से
-• धर्म पालन में दृढ़ता के लिए`,
-    'ashtami': `**अष्टमी - जैन धर्म में विशेष तप दिवस**
-
-**प्रत्येक पक्ष की अष्टमी** (8वां दिन) जैन धर्म में महत्वपूर्ण है।
-
-**धार्मिक महत्व:**
-• उपवास और तप का दिन
-• आत्म-शुद्धि का अवसर
-• कर्म निर्जरा के लिए उत्तम समय
-
-**मनाने की विधि:**
-• निराहार या एकासन उपवास
-• मंदिर में विशेष पूजा
-• धार्मिक ग्रंथों का अध्ययन
-• दान और सेवा कार्य
-
-**आध्यात्मिक लाभ:**
-• मानसिक शुद्धता
-• इंद्रिय नियंत्रण
-• धार्मिक अनुशासन में वृद्धि`,
-    'chaudash': `**चौदश (चतुर्दशी) - जैन पर्व दिवस**
-
-**प्रत्येक पक्ष की चतुर्दशी** को पर्व दिवस माना जाता है।
-
-**धार्मिक महत्व:**
-• तप और उपवास का दिन
-• आध्यात्मिक साधना के लिए उत्तम
-• कर्म शुद्धि का अवसर
-
-**मनाने की रीति:**
-• उपवास या आयंबिल व्रत
-• तीर्थंकर पूजा और स्तुति
-• धार्मिक प्रवचन श्रवण
-• दान-पुण्य के कार्य
-
-**सामुदायिक गतिविधियां:**
-• मंदिर में सामूहिक पूजा
-• धार्मिक चर्चा और सत्संग
-• गरीबों को भोजन दान`,
     'upvas': `**जैन उपवास - आत्मा की शुद्धि का मार्ग**
 
 **उपवास के प्रकार:**
@@ -168,82 +110,6 @@ const jainKnowledgeBase = {
 • Lay Jains can perform abhishek
 • It represents their devotion and faith
 • Different paths for monks and householders`,
-    'moksha saptami': `**Moksha Saptami - Day of Tirthankaras' Liberation**
-
-Observed on **Kartik Krishna Saptami**, this sacred day commemorates liberation.
-
-**Significance:**
-• Many Tirthankaras attained moksha on this day
-• Symbol of soul's ultimate freedom
-• Remembrance of liberation from karmic bondage
-
-**Observance Methods:**
-• Morning bath and pure clothing
-• Temple visit and Tirthankara worship
-• Remembrance of liberated Tirthankaras
-• Charity and virtuous deeds
-
-**Spiritual Benefits:**
-• Inspiration for liberation path
-• Opportunity for karmic purification
-• Self-reflection and improvement`,
-    'dates': `**Jain Festival Dates and Calendar**
-
-Jain festivals follow the **lunar calendar** and dates vary each year.
-
-**Major Festivals:**
-• **Paryushan:** Most important 8-day festival
-• **Diwali:** Celebrates Lord Mahavira's moksha
-• **Mahavir Jayanti:** Birth of 24th Tirthankara
-• **Akshaya Tritiya:** Auspicious day for charity
-
-**Monthly Observances:**
-• **Ashtami:** 8th day fasting
-• **Chaudash:** 14th day celebrations
-• **Ekadashi:** 11th day spiritual practices
-
-**Calculation:**
-• Based on lunar months (Chaitra to Phalguna)
-• Varies by 10-15 days from solar calendar
-• Consult Jain calendar (Panchang) for exact dates`,
-    'ashtami': `**Ashtami - Sacred Fasting Day in Jainism**
-
-The **8th day** of each lunar fortnight is considered highly auspicious.
-
-**Religious Significance:**
-• Day for fasting and spiritual austerity
-• Opportunity for self-purification
-• Excellent time for karmic cleansing
-
-**Observance Methods:**
-• Complete fasting or single meal (Ekasan)
-• Special temple worship
-• Study of religious scriptures
-• Charity and service activities
-
-**Spiritual Benefits:**
-• Mental purification
-• Sense control development
-• Enhanced religious discipline`,
-    'chaudash': `**Chaudash (14th Day) - Jain Festival Day**
-
-The **14th day** of each lunar fortnight is considered a festival day.
-
-**Religious Importance:**
-• Day for austerity and fasting
-• Excellent for spiritual practice
-• Opportunity for karmic purification
-
-**Observance Traditions:**
-• Fasting or Ayambil vow
-• Tirthankara worship and prayers
-• Listening to religious discourses
-• Charitable activities
-
-**Community Activities:**
-• Collective temple worship
-• Religious discussions and satsang
-• Food donation to the needy`,
     'fasting': `**Jain Fasting - Path to Soul Purification**
 
 **Types of Fasting:**
@@ -287,10 +153,11 @@ function getJainKnowledgeResponse(query: string, language: 'english' | 'hindi'):
     }
   }
 
-  // Specific pattern matching
-  if ((lowerQuery.includes('मुनि') && (lowerQuery.includes('तीर्थंकर') || lowerQuery.includes('अभिषेक'))) ||
-      (lowerQuery.includes('monk') && (lowerQuery.includes('abhishek') || lowerQuery.includes('tirthankar')))) {
-    return knowledge['मुनि तीर्थंकर अभिषेक'] || knowledge['monks abhishek tirthankar'];
+  // Specific pattern matching for fasting
+  if (lowerQuery.includes('fasting') || lowerQuery.includes('upvas') || lowerQuery.includes('उपवास') || 
+      lowerQuery.includes('व्रत') || lowerQuery.includes('एकादशी') || lowerQuery.includes('पर्युषण') ||
+      lowerQuery.includes('आयंबिल') || lowerQuery.includes('निर्जला')) {
+    return knowledge['upvas'] || knowledge['fasting'];
   }
 
   return null;
@@ -301,60 +168,105 @@ function detectLanguage(text: string): 'english' | 'hindi' {
   return hindiRegex.test(text) ? 'hindi' : 'english';
 }
 
-// ===== Enhanced Perplexity API Call =====
+// ===== Enhanced Perplexity API Call with Better Error Handling =====
 async function callPerplexityAPI(prompt: string, language: 'english' | 'hindi', apiKey: string) {
+  console.log('Starting Perplexity API call...');
+  
+  // Validate API key format
+  if (!apiKey || !apiKey.startsWith('pplx-')) {
+    throw new Error('Invalid API key format. Perplexity keys must start with "pplx-"');
+  }
+
   const systemPrompt = language === 'hindi'
-    ? `आप जैन एआई हैं, जैन धर्म के विशेषज्ञ। आपको केवल हिंदी में उत्तर देना है। जैन धर्म, दर्शन, उपवास विधि, और परंपराओं के बारे में सटीक और संतुलित जानकारी प्रदान करें। श्वेतांबर और दिगंबर दोनों परंपराओं का सम्मान करें।`
-    : `You are JAIN AI, an expert in Jain religion and philosophy. Provide accurate, balanced information about Jainism, including perspectives from both Śvetāmbara and Digambara traditions. Focus on authentic Jain teachings, practices, and principles. Always respond in English.`;
+    ? `आप जैन एआई हैं, जैन धर्म के विशेषज्ञ। आपको केवल हिंदी में उत्तर देना है। जैन धर्म, दर्शन, उपवास विधि, और परंपराओं के बारे में सटीक और संतुलित जानकारी प्रदान करें। श्वेतांबर और दिगंबर दोनों परंपराओं का सम्मान करें। उत्तर में मार्कडाउन फॉर्मेटिंग का उपयोग करें।`
+    : `You are JAIN AI, an expert in Jain religion and philosophy. Provide accurate, balanced information about Jainism, including perspectives from both Śvetāmbara and Digambara traditions. Focus on authentic Jain teachings, practices, and principles. Always respond in English with markdown formatting.`;
 
   const enhancedPrompt = language === 'hindi'
     ? `जैन धर्म के संदर्भ में इस प्रश्न का उत्तर दें: ${prompt}\n\nकृपया श्वेतांबर और दिगंबर दोनों परंपराओं के दृष्टिकोण शामिल करें यदि प्रासंगिक हो।`
     : `Answer this question in the context of Jain religion: ${prompt}\n\nPlease include perspectives from both Śvetāmbara and Digambara traditions if relevant.`;
 
-  const response = await fetch("https://api.perplexity.ai/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "llama-3.1-sonar-large-128k-online",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: enhancedPrompt }
-      ],
-      temperature: 0.2,
-      max_tokens: 2000
-    })
-  });
+  try {
+    console.log('Making request to Perplexity API...');
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('Perplexity API Error:', errorText);
-    throw new Error(`Perplexity API error: ${response.status} - ${errorText}`);
+    const response = await fetch("https://api.perplexity.ai/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "User-Agent": "JainAI/1.0"
+      },
+      body: JSON.stringify({
+        model: "llama-3.1-sonar-large-128k-online",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: enhancedPrompt }
+        ],
+        temperature: 0.2,
+        max_tokens: 2000,
+        stream: false
+      }),
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+
+    console.log('Perplexity API response status:', response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Perplexity API Error Response:', errorText);
+      
+      if (response.status === 401) {
+        throw new Error('Invalid API key. Please check your Perplexity API key.');
+      } else if (response.status === 429) {
+        throw new Error('Rate limit exceeded. Please try again later.');
+      } else if (response.status >= 500) {
+        throw new Error('Perplexity service is temporarily unavailable. Please try again later.');
+      } else {
+        throw new Error(`Perplexity API error: ${response.status} - ${errorText}`);
+      }
+    }
+
+    const data = await response.json();
+    console.log('Perplexity API response received successfully');
+    
+    const content = data.choices?.[0]?.message?.content;
+    
+    if (!content) {
+      throw new Error("No content received from Perplexity API");
+    }
+
+    return {
+      content: content,
+      usedWebSearch: true
+    };
+
+  } catch (error) {
+    console.error('Perplexity API call failed:', error);
+    
+    if (error.name === 'AbortError') {
+      throw new Error('Request timeout. Please try again.');
+    }
+    
+    throw error;
   }
-
-  const data = await response.json();
-  const content = data.choices?.[0]?.message?.content;
-  
-  if (!content) {
-    throw new Error("No content received from Perplexity API");
-  }
-
-  return {
-    content: content,
-    usedWebSearch: true
-  };
 }
 
 // ===== Main Supabase Edge Function =====
 serve(async (req) => {
+  console.log('Edge function called with method:', req.method);
+  
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     const bodyText = await req.text();
+    console.log('Request body received, length:', bodyText.length);
+    
     if (!bodyText) {
       return new Response(JSON.stringify({ error: "Empty request body" }), {
         status: 400, 
@@ -374,6 +286,7 @@ serve(async (req) => {
     }
 
     const { question, language: requestedLang, apiKey } = parsed;
+    console.log('Parsed request - Question length:', question?.length, 'Language:', requestedLang);
     
     if (!question) {
       return new Response(JSON.stringify({ error: "Question is required" }), {
@@ -390,10 +303,12 @@ serve(async (req) => {
     }
 
     const language = requestedLang || detectLanguage(question);
+    console.log('Detected/Selected language:', language);
 
     // Try Knowledge Base first
     const kbResponse = getJainKnowledgeResponse(question, language);
     if (kbResponse) {
+      console.log('Returning knowledge base response');
       return new Response(JSON.stringify({ 
         content: kbResponse, 
         usedWebSearch: false 
@@ -402,13 +317,32 @@ serve(async (req) => {
       });
     }
 
-    // Fallback to Perplexity AI with user's API key
-    console.log('Calling Perplexity API for question:', question);
-    const aiResponse = await callPerplexityAPI(question, language, apiKey);
+    // Fallback to Perplexity AI with enhanced error handling
+    console.log('Calling Perplexity API for question:', question.substring(0, 50) + '...');
     
-    return new Response(JSON.stringify(aiResponse), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" }
-    });
+    try {
+      const aiResponse = await callPerplexityAPI(question, language, apiKey);
+      console.log('Perplexity API call successful');
+      
+      return new Response(JSON.stringify(aiResponse), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    } catch (perplexityError) {
+      console.error('Perplexity API Error:', perplexityError);
+      
+      // Return a helpful fallback response
+      const fallbackContent = language === 'hindi'
+        ? `**क्षमा करें** 🙏\n\nमुझे इस समय Perplexity AI से जुड़ने में समस्या हो रही है।\n\n**संभावित समाधान:**\n• अपनी API कुंजी जांचें\n• कुछ समय बाद पुनः प्रयास करें\n• सुनिश्चित करें कि आपकी API कुंजी सक्रिय है\n\n**त्रुटि:** ${perplexityError.message}`
+        : `**Sorry** 🙏\n\nI'm having trouble connecting to Perplexity AI right now.\n\n**Possible solutions:**\n• Check your API key\n• Try again in a few moments\n• Ensure your API key is active\n\n**Error:** ${perplexityError.message}`;
+
+      return new Response(JSON.stringify({
+        content: fallbackContent,
+        usedWebSearch: false,
+        error: true
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
 
   } catch (err) {
     console.error('Edge Function Error:', err);

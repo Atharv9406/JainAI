@@ -50,17 +50,17 @@ const JainAIChat = () => {
   // Check connection status
   useEffect(() => {
     const checkConnection = async () => {
+      setConnectionStatus('checking');
       try {
-        const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/jain-ai-chat`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
-          },
-          body: JSON.stringify({ question: 'test', language: 'english', apiKey: 'test' })
-        });
+        // Simple connectivity check
+        const testKey = getAPIKey();
+        if (testKey) {
+          // Test with a simple question to verify connectivity
+          await getAIResponse('test connection', 'english');
+        }
         setConnectionStatus('connected');
       } catch (error) {
+        console.log('Connection check failed:', error);
         setConnectionStatus('disconnected');
       }
     };
